@@ -8,46 +8,43 @@ class GildedRose
     @items.each do |item|
       next if item.name == "Sulfuras, Hand of Ragnaros"
       item.sell_in -= 1
-      if item.name == "Aged Brie"
-        if item.quality < 50
-          if item.sell_in < 0
-            item.quality = item.quality + 2
-          else
-            item.quality = item.quality + 1
-          end
-        end
-
-
-      elsif item.name == "Conjured"
-        if item.quality > 0
-          if item.sell_in < 0
-            item.quality = item.quality - 4
-          else
-            item.quality = item.quality - 2
-          end
-        end
-
-      elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
-        if item.quality < 50
-          if item.sell_in < 0
-            item.quality = 0
-          elsif item.sell_in > 0 && item.sell_in < 5
-            item.quality = item.quality + 3
-          elsif item.sell_in > 5 && item.sell_in < 10
-            item.quality = item.quality + 2
-          else
-            item.quality = item.quality + 1
-          end
-        end
+      if increases_in_value(item)
+        increase_quality(item)
       else
-        if item.quality > 0
-          if item.sell_in < 0
-            item.quality = item.quality - 2
-          else
-            item.quality = item.quality - 1
-          end
-        end
+        decrease_quality(item)
       end
+    end
+  end
+
+  def increase_quality(item)
+    if item.quality < 50
+      item.name == "Aged Brie" ? change(item, 1) : backstage_passes(item)
+    end
+  end
+
+  def decrease_quality(item)
+    if item.quality > 0
+      item.name == "Conjured" ? change(item, -2) : change(item, -1)
+    end
+  end
+
+  def change(item, amount)
+    item.sell_in < 0 ? item.quality += amount * 2 : item.quality += amount
+  end
+  
+  def increases_in_value(item)
+    item.name == "Backstage passes to a TAFKAL80ETC concert" || item.name == "Aged Brie"
+  end
+
+  def backstage_passes(item)
+    if item.sell_in < 0
+      item.quality = 0
+    elsif item.sell_in.between?(0, 5)
+      item.quality += 3
+    elsif item.sell_in.between?(5, 10)
+      item.quality += 2
+    else
+      item.quality += 1
     end
   end
 end
