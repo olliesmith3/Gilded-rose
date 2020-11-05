@@ -116,5 +116,21 @@ describe GildedRose do
       GildedRose.new(items).update_quality()
       expect(items[0].quality).to eq 28
     end
+
+    it "For a Conjured item, the quality cannot go below 0" do
+      items = [Item.new("Conjured", 1, 0)]
+      GildedRose.new(items).update_quality()
+      expect(items[0].quality).to eq 0
+    end
+
+    it "if all item types are entered then the method still produces the results of other tests" do
+      items = [Item.new("Conjured", 1, 0), Item.new("Backstage passes to a TAFKAL80ETC concert", 3, 30), Item.new("Sulfuras, Hand of Ragnaros", -10, 80), Item.new("Aged Brie", 0, 0), Item.new("foo", 1, 2)]
+      GildedRose.new(items).update_quality()
+      expect(items[0].quality).to eq 0
+      expect(items[1].quality).to eq 33
+      expect(items[2].quality).to eq 80
+      expect(items[3].quality).to eq 2
+      expect(items[4].quality).to eq 1
+    end
   end
 end
