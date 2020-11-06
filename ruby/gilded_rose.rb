@@ -10,11 +10,7 @@ class GildedRose
       next if item.name == 'Sulfuras, Hand of Ragnaros'
 
       item.sell_in -= 1
-      if increases_in_value(item)
-        increase_quality(item)
-      else
-        decrease_quality(item)
-      end
+      increases_in_value(item) ? increase_quality(item) : decrease_quality(item)
     end
   end
 
