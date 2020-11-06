@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
-class GildedRose
+class Shop
+
+  MAX_QUALITY = 50
+  SECOND_TIER_TICKETS_DAYS = 10
+  THIRD_TIER_TICKETS_DAYS = 5
+
   def initialize(items)
     @items = items
   end
@@ -17,7 +22,7 @@ class GildedRose
   private
 
   def increase_quality(item)
-    if item.quality < 50
+    if item.quality < MAX_QUALITY
       item.name == 'Aged Brie' ? change(item, 1) : backstage_passes(item)
     end
   end
@@ -39,9 +44,9 @@ class GildedRose
   def backstage_passes(item)
     if item.sell_in.negative?
       item.quality = 0
-    elsif item.sell_in.between?(0, 5)
+    elsif item.sell_in.between?(0, THIRD_TIER_TICKETS_DAYS)
       item.quality += 3
-    elsif item.sell_in.between?(5, 10)
+    elsif item.sell_in.between?(THIRD_TIER_TICKETS_DAYS, SECOND_TIER_TICKETS_DAYS)
       item.quality += 2
     else
       item.quality += 1
@@ -49,16 +54,3 @@ class GildedRose
   end
 end
 
-class Item
-  attr_accessor :name, :sell_in, :quality
-
-  def initialize(name, sell_in, quality)
-    @name = name
-    @sell_in = sell_in
-    @quality = quality
-  end
-
-  def to_s
-    "#{@name}, #{@sell_in}, #{@quality}"
-  end
-end
